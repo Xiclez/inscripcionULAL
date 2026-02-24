@@ -219,7 +219,7 @@
 
     <script>
         // Variables Globales
-        const API_ULAL = "http://74.208.116.21/webApi/api";
+        //const API_ULAL = "http://74.208.116.21/webApi/api";
         const API_LOCAL = "https://api-ulal.acuerdo286-sep.com/api";
         let currentVendedor = null;
 
@@ -299,7 +299,7 @@
             const ddl = document.getElementById("sucursales");
             ddl.innerHTML = '<option value="">Cargando...</option>';
             try {
-                const res = await fetch(`${API_ULAL}/BusinessUnits/Get/Online`);
+                const res = await fetch(`${API_LOCAL}/proxy/sucursales`);
                 const json = await res.json();
                 populateSelect(ddl, json.data, "businessUnitId", "businessUnitName", "Seleccione Sucursal");
             } catch (error) {
@@ -314,7 +314,7 @@
             
             ddl.innerHTML = '<option value="">Cargando...</option>';
             try {
-                const res = await fetch(`${API_ULAL}/ItemServices/Get/Online/BusinessUnitId/${sucursalId}`);
+                const res = await fetch(`${API_LOCAL}/proxy/cursos/${sucursalId}`);
                 const json = await res.json();
                 populateSelect(ddl, json.data, "itemServiceId", "description", "Seleccione un Curso");
             } catch (error) {
@@ -375,7 +375,7 @@
 
             try {
                 // 1. Enviar a servidor original (74.208.116.21) emulando tu curl
-                const reqOriginal = fetch(`${API_ULAL}/InscriptionsOnline/Create`, {
+                const reqOriginal = fetch(`${API_LOCAL}/proxy/inscripciones`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payloadOriginal)
