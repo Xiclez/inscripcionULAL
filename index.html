@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>ULAL | Plataforma de Registro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    
+    <style>
+        body {
+            background-color: #1e3a5f;
+            background-image: linear-gradient(135deg, #1e3a5f 0%, #102138 100%);
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            color: #f8f9fa;
+        }
+        .card-core {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin-bottom: 50px;
+        }
+        .container-control-form { margin-bottom: 15px; }
+        .container-control-form h6 { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+        .field-req { color: #e74c3c; font-weight: bold; }
+        .form-control { background-color: rgba(255, 255, 255, 0.9); border: none; border-radius: 6px; }
+        .form-control:focus { box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25); }
+        .btn-primary { background-color: #3498db; border: none; padding: 10px; font-weight: 700; border-radius: 8px; transition: all 0.3s; }
+        .btn-primary:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .card-finish { background: rgba(0, 0, 0, 0.2); padding: 40px 20px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center; }
+        .vendedor-banner { background-color: #2ecc71; color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; text-align: center; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding-top: 50px;">
+        <div class="row justify-content-md-center">
+            <div class="col-md-8 card-core">
+                <div class="text-center" style="margin-bottom: 20px;">
+                    <div style="width: 60px; height: 60px; background: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #1e3a5f; font-size: 20px; margin: 0 auto;">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h4 class="mt-3">Universidad en Línea América Latina</h4>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- VISTA 1: REGISTRO DE VENDEDOR (Base "/")   -->
+                <!-- ========================================== -->
+                <div id="view-vendedor" class="view-section">
+                    <h5 class="text-center mb-4"><i class="fas fa-user-tie"></i> Registro de Promotor / Vendedor</h5>
+                    <div class="row">
+                        <div class="form-group col-md-12 container-control-form">
+                            <h6>Nombre(s) <span class="field-req">*</span></h6>
+                            <input type="text" class="form-control" id="v-nombres">
+                        </div>
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Apellido Paterno <span class="field-req">*</span></h6>
+                            <input type="text" class="form-control" id="v-apPaterno">
+                        </div>
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Apellido Materno <span class="field-req">*</span></h6>
+                            <input type="text" class="form-control" id="v-apMaterno">
+                        </div>
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Email <span class="field-req">*</span></h6>
+                            <input type="email" class="form-control" id="v-email">
+                        </div>
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Teléfono <span class="field-req">*</span></h6>
+                            <input type="tel" class="form-control" id="v-telefono">
+                        </div>
+                        <div class="form-group col-md-12 mt-3">
+                            <button type="button" class="col-12 btn btn-primary" onclick="registrarVendedor()">
+                                <i class="fas fa-link"></i> Generar Enlace Personalizado
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- VISTA 2: FORMULARIO CLIENTE (?v=ID)        -->
+                <!-- ========================================== -->
+                <div id="view-cliente" class="view-section">
+                    <div id="vendedor-info" class="vendedor-banner" style="display: none;">
+                        <i class="fas fa-handshake"></i> Atendido por: <span id="vendedor-nombre"></span>
+                    </div>
+                    <h5 class="text-center mb-4"><i class="fas fa-user-graduate"></i> Inscripción en Línea</h5>
+                    
+                    <div class="row px-2">
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Sucursal <span class="field-req">*</span></h6>
+                            <select class="form-control" id="sucursales" onchange="GetCursos()"></select>
+                        </div>
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Curso <span class="field-req">*</span></h6>
+                            <select class="form-control" id="cursos"></select>
+                        </div>                    
+
+                        <div class="form-group col-md-12 container-control-form">
+                            <h6>Nombres(s) <span class="field-req">*</span></h6>
+                            <input type="text" class="form-control" id="txtFirstName" />
+                        </div>
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Apellido Paterno <span class="field-req">*</span></h6>
+                            <input type="text" class="form-control" id="txtLastName" />
+                        </div>
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Apellido Materno <span class="field-req">*</span></h6>
+                            <input type="text" class="form-control" id="txtFirstNameMother" />
+                        </div>
+                        <div class="form-group col-md-12 container-control-form">
+                            <h6>CURP <span class="field-req">*</span></h6>
+                            <input type="text" class="form-control" id="txtCURP" />
+                        </div>
+                        <div class="form-group col-md-4 container-control-form">
+                            <h6>Fecha Nacimiento<span class="field-req">*</span></h6>
+                            <input type="date" class="form-control" id="dateBirth" onchange="getAge()">
+                        </div>
+                        <div class="form-group col-md-2 container-control-form">
+                            <h6>Edad <span class="field-req">*</span></h6>
+                            <input type="number" class="form-control" id="txtAge" readonly style="background-color: #e9ecef;" />
+                        </div>
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Lugar Nacimiento <span class="field-req">*</span></h6>
+                            <input type="text" class="form-control" id="txtPlaceBirth" />
+                        </div>
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Nivel escolar <span class="field-req">*</span></h6>
+                            <select id="txtlevelEducation" class="form-control">
+                                <option value="Primaria">Primaria</option>
+                                <option value="Secundaria">Secundaria</option>
+                                <option value="Preparatoria">Preparatoria</option>
+                                <option value="Universidad">Universidad</option>
+                                <option value="Indefinido">Indefinido</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6 container-control-form">
+                            <h6>Escuela Anterior <span class="field-req">*</span></h6>
+                            <input type="text" class="form-control" id="txtLastSchool" />
+                        </div>
+                        <div class="form-group col-md-4 container-control-form">
+                            <h6>Teléfono <span class="field-req">*</span></h6>
+                            <input type="tel" class="form-control" id="txtPhone" />
+                        </div>
+                        <div class="form-group col-md-4 container-control-form">
+                            <h6>Teléfono Familiar <span class="field-req">*</span></h6>
+                            <input type="tel" class="form-control" id="txtPhoneFamily" />
+                        </div>
+                        <div class="form-group col-md-4 container-control-form">
+                            <h6>Teléfono Otro <span class="field-req">*</span></h6>
+                            <input type="tel" class="form-control" id="txtPhoneOther" />
+                        </div>
+                        <div class="form-group col-md-12 container-control-form">
+                            <h6>Email <span class="field-req">*</span></h6>
+                            <input type="email" class="form-control" id="txtEmail" />
+                        </div>
+                        
+                        <!-- NUEVO CAMPO: RED SOCIAL -->
+                        <div class="form-group col-md-12 container-control-form">
+                            <h6>Red Social (Opcional)</h6>
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <select id="rs-network" class="form-control">
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Instagram">Instagram</option>
+                                        <option value="TikTok">TikTok</option>
+                                        <option value="Twitter(X)">Twitter (X)</option>
+                                        <option value="LinkedIn">LinkedIn</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" id="rs-username" class="form-control" placeholder="@usuario o link al perfil">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12 mt-3">
+                            <button type="button" class="col-12 btn btn-primary" onclick="postInscription()">
+                                <i class="fas fa-paper-plane"></i> Enviar Inscripción
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- PANTALLAS DE ÉXITO                         -->
+                <!-- ========================================== -->
+                
+                <!-- Éxito Vendedor -->
+                <div id="view-success-vendedor" class="view-section card-finish">
+                    <h4>¡Vendedor Registrado!</h4>
+                    <p>Comparte el siguiente enlace con tus clientes:</p>
+                    <div class="input-group mt-3 mb-3">
+                        <input type="text" id="link-vendedor" class="form-control" readonly>
+                        <div class="input-group-append">
+                            <button class="btn btn-success" type="button" onclick="copiarLink()">Copiar</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-light mt-3" onclick="location.reload()">Registrar otro vendedor</button>
+                </div>
+
+                <!-- Éxito Cliente -->
+                <div id="view-success-cliente" class="view-section card-finish">
+                    <h4>¡Inscripción Exitosa!</h4>
+                    <div style="font-size: 60px; color: #2ecc71; margin: 15px 0;"><i class="fas fa-check-circle"></i></div>
+                    <h3 id="no-folio" style="color: #f1c40f;"></h3>
+                    <p class="mt-3">Tu registro ha sido completado y guardado de manera segura.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables Globales
+        const API_ULAL = "http://74.208.116.21/webApi/api";
+        const API_LOCAL = "https://api-ulal.acuerdo286-sep.com/api";
+        let currentVendedor = null;
+
+        // ROUTER BÁSICO (Detectar si hay Vendedor en la URL)
+        document.addEventListener("DOMContentLoaded", async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const vendedorId = urlParams.get('v');
+
+            if (vendedorId) {
+                // Modo Cliente
+                document.getElementById('view-cliente').classList.add('active');
+                await cargarDatosVendedor(vendedorId);
+                await GetSucursales();
+            } else {
+                // Modo Vendedor
+                document.getElementById('view-vendedor').classList.add('active');
+            }
+        });
+
+        /* ================= LÓGICA VENDEDOR ================= */
+        async function registrarVendedor() {
+            const data = {
+                nombres: document.getElementById('v-nombres').value,
+                apellidoPaterno: document.getElementById('v-apPaterno').value,
+                apellidoMaterno: document.getElementById('v-apMaterno').value,
+                email: document.getElementById('v-email').value,
+                telefono: document.getElementById('v-telefono').value
+            };
+
+            if(!data.nombres || !data.apellidoPaterno || !data.email) return alert("Llena los campos requeridos");
+
+            try {
+                const res = await fetch(`${API_LOCAL}/vendedores`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const response = await res.json();
+                
+                if(response.success) {
+                    document.getElementById('view-vendedor').classList.remove('active');
+                    document.getElementById('view-success-vendedor').classList.add('active');
+                    
+                    // Generar enlace
+                    const link = `${window.location.origin}/?v=${response.data._id}`;
+                    document.getElementById('link-vendedor').value = link;
+                }
+            } catch (error) {
+                alert("Error registrando vendedor");
+            }
+        }
+
+        function copiarLink() {
+            const copyText = document.getElementById("link-vendedor");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Enlace copiado al portapapeles");
+        }
+
+        async function cargarDatosVendedor(id) {
+            try {
+                const res = await fetch(`${API_LOCAL}/vendedores/${id}`);
+                const response = await res.json();
+                if(response.success) {
+                    currentVendedor = response.data;
+                    const nombreCompleto = `${currentVendedor.nombres} ${currentVendedor.apellidoPaterno}`;
+                    document.getElementById('vendedor-nombre').innerText = nombreCompleto;
+                    document.getElementById('vendedor-info').style.display = 'block';
+                }
+            } catch (error) {
+                console.warn("No se pudo cargar info del vendedor");
+            }
+        }
+
+        /* ================= LÓGICA CLIENTE (EL CLON) ================= */
+        async function GetSucursales() {
+            const ddl = document.getElementById("sucursales");
+            ddl.innerHTML = '<option value="">Cargando...</option>';
+            try {
+                const res = await fetch(`${API_ULAL}/BusinessUnits/Get/Online`);
+                const json = await res.json();
+                populateSelect(ddl, json.data, "businessUnitId", "businessUnitName", "Seleccione Sucursal");
+            } catch (error) {
+                console.error("Error cargando sucursales");
+            }
+        }
+
+        async function GetCursos() {
+            const sucursalId = document.getElementById("sucursales").value;
+            const ddl = document.getElementById("cursos");
+            if (!sucursalId) return ddl.innerHTML = '<option value="">Seleccione primero una sucursal</option>';
+            
+            ddl.innerHTML = '<option value="">Cargando...</option>';
+            try {
+                const res = await fetch(`${API_ULAL}/ItemServices/Get/Online/BusinessUnitId/${sucursalId}`);
+                const json = await res.json();
+                populateSelect(ddl, json.data, "itemServiceId", "description", "Seleccione un Curso");
+            } catch (error) {
+                console.error("Error cargando cursos");
+            }
+        }
+
+        function populateSelect(el, data, valProp, textProp, defaultText) {
+            el.innerHTML = `<option value="">${defaultText}</option>`;
+            data.forEach(item => el.innerHTML += `<option value="${item[valProp]}">${item[textProp]}</option>`);
+        }
+
+        function getAge() {
+            const dateInput = document.getElementById("dateBirth").value;
+            if (!dateInput) return;
+            const b = new Date(dateInput), t = new Date();
+            let age = t.getFullYear() - b.getFullYear();
+            if (t.getMonth() < b.getMonth() || (t.getMonth() === b.getMonth() && t.getDate() < b.getDate())) age--;
+            document.getElementById("txtAge").value = age;
+        }
+
+        // DOBLE ENVÍO: Servidor ULAL Original + Servidor Mongo Local
+        async function postInscription() {
+            // Recopilar datos
+            const payloadOriginal = {
+                businessUnitId: document.getElementById("sucursales").value,
+                itemServiceId: document.getElementById("cursos").value,
+                firstName: document.getElementById("txtFirstName").value,
+                lastName: document.getElementById("txtLastName").value,
+                lastNameMother: document.getElementById("txtFirstNameMother").value,
+                curp: document.getElementById("txtCURP").value,
+                dateBirth: document.getElementById("dateBirth").value,
+                age: document.getElementById("txtAge").value,
+                placeBirth: document.getElementById("txtPlaceBirth").value,
+                levelEducation: document.getElementById("txtlevelEducation").value,
+                lastSchool: document.getElementById("txtLastSchool").value,
+                phone: document.getElementById("txtPhone").value,
+                phoneFamily: document.getElementById("txtPhoneFamily").value,
+                phoneOther: document.getElementById("txtPhoneOther").value,
+                email: document.getElementById("txtEmail").value
+            };
+
+            // Preparar el Payload para Mongo (Incluye lo de arriba + Redes Sociales + Vendedor)
+            const rsNetwork = document.getElementById("rs-network").value;
+            const rsUser = document.getElementById("rs-username").value;
+            
+            const payloadMongo = {
+                ...payloadOriginal,
+                redSocial: rsUser ? `${rsNetwork}/${rsUser}` : '',
+                registradoPor: currentVendedor ? `${currentVendedor.nombres} ${currentVendedor.apellidoPaterno} ${currentVendedor.apellidoMaterno}` : 'Organico',
+                vendedorId: currentVendedor ? currentVendedor._id : null
+            };
+
+            // Validar requeridos
+            if(!payloadOriginal.businessUnitId || !payloadOriginal.firstName) {
+                return alert("Faltan campos obligatorios");
+            }
+
+            try {
+                // 1. Enviar a servidor original (74.208.116.21) emulando tu curl
+                const reqOriginal = fetch(`${API_ULAL}/InscriptionsOnline/Create`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payloadOriginal)
+                });
+
+                // 2. Enviar copia a la base de datos local MongoDB
+                const reqMongo = fetch(`${API_LOCAL}/inscripciones`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payloadMongo)
+                });
+
+                // Ejecutamos ambas promesas en paralelo
+                await Promise.all([reqOriginal, reqMongo]);
+
+                // Mostrar éxito
+                document.getElementById('view-cliente').classList.remove('active');
+                document.getElementById('view-success-cliente').classList.add('active');
+                document.getElementById('no-folio').innerText = `FOLIO-${Math.floor(1000 + Math.random() * 9000)}`;
+
+            } catch (error) {
+                alert("Ocurrió un error al enviar la inscripción. Revisa la consola.");
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
